@@ -1,0 +1,9 @@
+/.git
+/.vscode
+/.vercel
+node_modules
+
+/build
+
+.husky
+declaration.d.ts

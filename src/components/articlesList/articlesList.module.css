@@ -1,0 +1,120 @@
+.container {
+    width: 941px;
+    margin: 0 auto;
+    padding-bottom: 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.list {
+    list-style: none;
+    margin: 0;
+    margin-top: 26px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.list__item {
+    min-height: 100px;
+    background-color: var(--background-color-base);
+    padding: 24px 19px;
+    border-radius: 5px;
+    filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
+    position: relative;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 4px;
+    max-width: 700px;
+}
+
+.title {
+    color: var(--info-color);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    margin: 0;
+    margin-right: 13px;
+}
+
+.favorites {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 28px;
+    color: var(--text-color);
+}
+
+.like {
+    width: 16px;
+    margin-right: 3px;
+    cursor: pointer;
+}
+
+.tag_list {
+    list-style: none;
+    margin: 0;
+    margin-bottom: 4px;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+}
+
+.tag {
+    border: 1px solid var(--text-color-secondary);
+    border-radius: 2px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--text-color-secondary);
+    padding: 2px 6px 3px;
+}
+
+.description {
+    max-width: 700px;
+    color: var(--text-color);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
+}
+
+.author {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.author__name {
+    font-size: 18px;
+    line-height: 28px;
+    text-align: right;
+    color: var(--heading-color);
+    margin-right: 58px;
+}
+
+.author__created {
+    font-size: 12px;
+    line-height: 22px;
+    text-align: right;
+    margin-right: 58px;
+
+}
+
+.authtor__avatar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 46px;
+    height: 46px;
+}

@@ -37,7 +37,8 @@
         "namedComponents": ["function-declaration", "arrow-function"],
         "unnamedComponents": "arrow-function"
       }
-    ]
+    ],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
   },
   "settings": {
     "import/resolver": {

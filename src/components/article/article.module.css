@@ -1,0 +1,80 @@
+.article {
+    max-width: 941px;
+    margin: 24px auto;
+    background-color: var(--background-color-base);
+    box-sizing: border-box;
+    padding: 19px;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    margin-bottom: 4px;
+}
+
+.title {
+    margin: 0;
+    margin-right: 13px;
+    color: var(--info-color);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+}
+
+.authtor {
+    position: absolute;
+    top: 17px;
+    right: 14px;
+}
+
+.shortText {
+    margin: 0;
+    margin-top: 19px;
+    padding: 0;
+    color: var(--text-color-secondary);
+    max-width: 682px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
+}
+
+.markdown {
+    margin: 0;
+    margin-top: 24px;
+    color: var(--text-color);
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: 0px;
+
+}
+
+.markdown h1 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0em;
+    margin: 4px 0;
+}
+
+.markdown h2 {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+    letter-spacing: 0em;
+    margin: 0;
+}
+
+.markdown p {
+    margin: 0 0 30px;
+}
+
+.markdown ol,
+.markdown ul {
+    margin: 0;
+    padding-left: 25px;
+}
+
+.markdown img {
+    max-width: 100%;
+}

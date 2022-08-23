@@ -7,7 +7,7 @@ import styles from './header.module.css'
 function Header() {
   return (
     <header className={styles.header}>
-      <Link to="/articles" className={styles.title}>
+      <Link to="/" className={styles.title}>
         RealWorld Blog
       </Link>
       <Button type="ghost" size="lg" onClick={() => {}}>

@@ -6,24 +6,23 @@
   --text-color-secondary: rgba(0, 0, 0, 0.5);
   --disabled-color: rgba(0, 0, 0, 0.35);
   --dividers: rgba(0, 0, 0, 0.09);
-  --background: #EBEEF3;
+  --background: #ebeef3;
   --table-header: rgba(0, 0, 0, 0.02);
-  --primary-color: #1890FF;
-  --info-color: #1890FF;
-  --success-color: #52C41A;
-  --processing-color: #1890FF;
-  --error-color: #F5222D;
-  --highlight-color: #F5222D;
-  --warning-color: #FAAD14;
-  --normal-color: #D9D9D9;
+  --primary-color: #1890ff;
+  --info-color: #1890ff;
+  --success-color: #52c41a;
+  --processing-color: #1890ff;
+  --error-color: #f5222d;
+  --highlight-color: #f5222d;
+  --warning-color: #faad14;
+  --normal-color: #d9d9d9;
   --disabled-color-dark: rgba(255, 255, 255, 0.35);
-  --background-color-base: #FFFFFF;
-  --border-color-base: #D9D9D9;
-  --btn-primary-color: #FFFFFF;
+  --background-color-base: #ffffff;
+  --border-color-base: #d9d9d9;
+  --btn-primary-color: #ffffff;
 }
 
 body {
-  font-family: 'Inter',
-    sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--background);
 }

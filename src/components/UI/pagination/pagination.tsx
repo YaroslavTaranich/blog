@@ -1,12 +1,11 @@
 import { FC } from 'react'
+import { Link, useParams } from 'react-router-dom'
 
 import styles from './pagination.module.css'
 
 interface PaginationProps {
-  totalCount: number
-  currentOffset: number
-  perPage: number
-  setOffset: (num: number) => void
+  totalPages: number
+  origin: string
 }
 
 const getPagesNumbers = (currentPage: number, totalPages: number): number[] => {
@@ -22,67 +21,71 @@ const getPagesNumbers = (currentPage: number, totalPages: number): number[] => {
   return res
 }
 
-const Pagination: FC<PaginationProps> = ({ totalCount, currentOffset, perPage, setOffset }) => {
-  const totalPages = Math.ceil(totalCount / perPage)
-  const currentPage = currentOffset / perPage + 1
-  const pageButtons = getPagesNumbers(currentPage, totalPages)
+const Pagination: FC<PaginationProps> = ({ totalPages, origin }) => {
+  const { page } = useParams()
+  const currentPage = Number(page)
+  const pageButtons = getPagesNumbers(Number(page), totalPages)
 
   return (
-    <div className={styles.pagination}>
-      <button
-        type="button"
-        className={styles.prev}
-        onClick={() => setOffset(currentOffset - perPage)}
-        disabled={currentOffset - perPage < 0}
-      >
-        &lt;
-      </button>
+    <ul className={styles.pagination}>
+      {currentPage > 1 && (
+        <li>
+          <Link to={`${origin}${currentPage - 1}`} className={styles.prev}>
+            &lt;
+          </Link>
+        </li>
+      )}
+
       {currentPage > 5 && (
         <>
-          <button type="button" className={styles.page_button} onClick={() => setOffset(0)}>
-            1
-          </button>
-          <button type="button" className={styles.page_button} onClick={() => setOffset(currentOffset - perPage * 5)}>
-            ...
-          </button>
+          <li>
+            <Link to={`${origin}1`} className={styles.page_button}>
+              1
+            </Link>
+          </li>
+          <li>
+            <Link to={`${origin}${currentPage - 5}`} className={styles.page_button}>
+              ...
+            </Link>
+          </li>
         </>
       )}
 
       {pageButtons.map((button) => (
-        <button
-          type="button"
-          key={`pagination-${button}`}
-          className={button === currentPage ? styles.page_button_active : styles.page_button}
-          onClick={() => setOffset(button * perPage - perPage)}
-        >
-          {button}
-        </button>
+        <li>
+          <Link
+            to={`${origin}${button}`}
+            key={`pagination-${button}`}
+            className={button === currentPage ? styles.page_button_active : styles.page_button}
+          >
+            {button}
+          </Link>
+        </li>
       ))}
 
       {currentPage < totalPages - 5 && (
         <>
-          <button type="button" className={styles.page_button} onClick={() => setOffset(currentOffset + perPage * 5)}>
-            ...
-          </button>
-          <button
-            type="button"
-            className={styles.page_button}
-            onClick={() => setOffset(totalPages * perPage - perPage)}
-          >
-            {totalPages}
-          </button>
+          <li>
+            <Link to={`${origin}${currentPage + 5}`} className={styles.page_button}>
+              ...
+            </Link>
+          </li>
+          <li>
+            <Link to={`${origin}${totalPages}`} className={styles.page_button}>
+              {totalPages}
+            </Link>
+          </li>
         </>
       )}
 
-      <button
-        type="button"
-        className={styles.next}
-        onClick={() => setOffset(currentOffset + perPage)}
-        disabled={currentPage === totalPages}
-      >
-        &gt;
-      </button>
-    </div>
+      {currentPage < totalPages && (
+        <li>
+          <Link to={`${origin}${currentPage + 1}`} className={styles.next}>
+            &gt;
+          </Link>
+        </li>
+      )}
+    </ul>
   )
 }
 

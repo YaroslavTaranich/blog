@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 import useFetch from '../../hooks/useFetching'
 import { IArticle } from '../../models/articles'
@@ -33,8 +33,11 @@ import styles from './article.module.css'
 
 function Article() {
   const location = useLocation()
+  const params = useParams()
 
-  const [data, status, errorMessage] = useFetch<{ article: IArticle }>(location.pathname)
+  console.log('in article', location, params)
+
+  const [data, status, errorMessage] = useFetch<{ article: IArticle }>(`/articles/${params.slug}`)
 
   if (status === 'loading') {
     return <Spinner />

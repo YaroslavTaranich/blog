@@ -7,7 +7,7 @@ type StatusType = 'resolved' | 'loading' | 'error'
 
 export default function useFetch<T>(
   url: string,
-  params: AxiosRequestConfig = {}
+  config: AxiosRequestConfig | undefined = undefined
 ): [data: T, status: StatusType, errorMessage: string] {
   const [data, setData] = useState<T>()
   const [status, setStatus] = useState<StatusType>('resolved')
@@ -16,7 +16,7 @@ export default function useFetch<T>(
   useEffect(() => {
     setStatus('loading')
     axios
-      .get<AxiosResponse>(url, params)
+      .get<AxiosResponse>(url, config)
       .then((res: AxiosResponse) => {
         setData(res.data as T)
         setStatus('resolved')
@@ -25,7 +25,7 @@ export default function useFetch<T>(
         setStatus('error')
         setErrorMessage(error.message)
       })
-  }, [url])
+  }, [url, config])
 
   return [data as T, status, errorMessage]
 }

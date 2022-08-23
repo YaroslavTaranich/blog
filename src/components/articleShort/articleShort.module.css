@@ -17,21 +17,6 @@
     text-decoration: none;
 }
 
-.favorites {
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 28px;
-    color: var(--text-color);
-}
-
-.like {
-    width: 16px;
-    margin-right: 3px;
-    cursor: pointer;
-}
-
-
-
 .description {
     max-width: 700px;
     color: var(--text-color);

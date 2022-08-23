@@ -5,6 +5,7 @@
     box-sizing: border-box;
     padding: 19px;
     position: relative;
+    overflow: hidden;
 }
 
 .header {
@@ -46,7 +47,6 @@
     font-size: 14px;
     line-height: 22px;
     letter-spacing: 0px;
-
 }
 
 .markdown h1 {

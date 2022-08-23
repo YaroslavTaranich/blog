@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 import ArticlesList from '../articlesList/articlesList'
 import Article from '../article/article'
@@ -10,14 +10,14 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<ArticlesList />} />
         <Route path="articles">
-          <Route index element={<ArticlesList />} />
-          <Route path=":id" element={<ArticlesList />}>
+          <Route index element={<Navigate to="/articles/1" replace />} />
+          <Route path=":page">
+            <Route index element={<ArticlesList />} />
             <Route path=":slug" element={<Article />} />
           </Route>
-          {/* <Route path=":slug" element={<Article />} /> */}
         </Route>
+        <Route path="*" element={<Navigate to="/articles/1" replace />} />
       </Routes>
     </>
   )

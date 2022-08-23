@@ -18,7 +18,7 @@ const ArticleShort: FC<ArticleShortProps> = ({ article }) => {
   return (
     <>
       <header className={styles.header}>
-        <Link to={`/articles/${article.slug}`} className={styles.title}>
+        <Link to={`${article.slug}`} className={styles.title}>
           {title}
         </Link>
         <Like count={favoritesCount} />

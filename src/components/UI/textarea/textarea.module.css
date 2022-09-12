@@ -1,0 +1,52 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.label {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--color-gray);
+    cursor: pointer;
+}
+
+.textarea {
+    margin: 0;
+    outline: none;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    background: var(--background-color-base);
+    border: 1px solid var(--border-color-base);
+    border-radius: 4px;
+    transition: box-shadow .3s;
+    height: 168px;
+}
+
+.textarea:focus {
+    box-shadow: 0 0 1px 1px var(--primary-color)
+}
+
+.error {
+    margin: 2px 0 0 0;
+    padding: 0;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--highlight-color)
+}
+
+
+.invalid .textarea {
+    box-shadow: 0 0 1px 1px var(--error-color);
+}

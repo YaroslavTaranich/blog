@@ -1,8 +1,8 @@
 import { IArticle } from './articles'
-import { IUser, IUserError } from './user'
+import { IUser } from './user'
 
-export interface IUserResponce {
-  user: IUser | IUserError
+export interface IUserResponse {
+  user: IUser
 }
 
 export interface IArticlesResponce {
@@ -14,10 +14,8 @@ export interface IArticleResponce {
   article: IArticle
 }
 
-// export interface IArticleError {
-//   message: string
-//   error: {
-//     status: number
-//     [key: string]: string | number
-//   }
-// }
+export interface ServerErrorResponse {
+  errors: {
+    [key: string]: string
+  }
+}

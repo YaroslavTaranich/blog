@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 
 import useFetch from '../../hooks/useFetching'
+// import authHeader from '../../services/authHeader'
 import { IArticle } from '../../models/articles'
 import Spinner from '../UI/spinner/spinner'
 import Pagination from '../UI/pagination/pagination'
 import ArticleShort from '../articleShort/articleShort'
+import ErrorMessage from '../errorMessage/errorMessge'
 
 import styles from './articlesList.module.css'
 
@@ -18,6 +20,9 @@ interface ArticlesListFetch {
 
 function ArticlesList() {
   const { page } = useParams()
+  const navigate = useNavigate()
+
+  if (Number.isNaN(Number(page))) navigate('/not-found')
 
   const fetchConfg = useMemo(
     () => ({
@@ -31,12 +36,8 @@ function ArticlesList() {
 
   const [data, status, errorMessage] = useFetch<ArticlesListFetch>('/articles', fetchConfg)
 
-  if (status === 'loading') {
-    return <Spinner />
-  }
-
   if (status === 'error') {
-    return <h2> {errorMessage}</h2>
+    return <ErrorMessage button="Go back!">{errorMessage}</ErrorMessage>
   }
 
   if (data) {
@@ -62,7 +63,7 @@ function ArticlesList() {
     )
   }
 
-  return <div> ERORRR!!!!!</div>
+  return <Spinner />
 }
 
 export default ArticlesList

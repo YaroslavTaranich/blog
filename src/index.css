@@ -1,4 +1,5 @@
 @import url('https://rsms.me/inter/inter.css');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 :root {
   --heading-color: rgba(0, 0, 0, 0.85);
@@ -20,9 +21,18 @@
   --background-color-base: #ffffff;
   --border-color-base: #d9d9d9;
   --btn-primary-color: #ffffff;
+  --color-gray: #262626;
+  --color-gray-4: #E8E8E8;
+  --color-gray-5: rgba(217, 217, 217, 1);
+  --color-gray-7: #8C8C8C;
+  --color-gray-8: #595959;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   background-color: var(--background);
+}
+
+a {
+  text-decoration: none;
 }

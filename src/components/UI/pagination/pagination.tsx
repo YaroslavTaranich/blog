@@ -52,10 +52,9 @@ const Pagination: FC<PaginationProps> = ({ totalPages, origin }) => {
       )}
 
       {pageButtons.map((button) => (
-        <li>
+        <li key={`pagination-${button}`}>
           <Link
             to={`${origin}${button}`}
-            key={`pagination-${button}`}
             className={button === currentPage ? styles.page_button_active : styles.page_button}
           >
             {button}

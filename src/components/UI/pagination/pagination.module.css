@@ -1,31 +1,31 @@
 .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .prev,
 .next,
 .page_button,
 .page_button_active {
-    outline: none;
-    border: none;
-    font-size: 12px;
-    padding: 3.6px 8px;
-    border-radius: 4px;
-    transition: all 0.4s;
-    text-decoration: none;
-    color: var(--text-color);
+  outline: none;
+  border: none;
+  font-size: 12px;
+  padding: 3.6px 8px;
+  border-radius: 4px;
+  transition: all 0.4s;
+  text-decoration: none;
+  color: var(--text-color);
 }
 
 .prev,
 .next {
-    /* font-size: 15px; */
-    padding-bottom: 5px;
+  /* font-size: 15px; */
+  padding-bottom: 5px;
 }
 
 .prev:hover:not(:disabled),
@@ -33,13 +33,13 @@
 .page_button:hover,
 .page_button_active:hover,
 .page_button_active {
-    background: var(--primary-color);
-    color: var(--btn-primary-color);
+  background: var(--primary-color);
+  color: var(--btn-primary-color);
 }
 
 .prev:focus,
 .next:focus,
 .page_button:focus,
 .page_button_active:focus {
-    box-shadow: 0 0 2px 2px var(--normal-color);
+  box-shadow: 0 0 2px 2px var(--normal-color);
 }

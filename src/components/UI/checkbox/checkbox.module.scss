@@ -1,0 +1,65 @@
+.check {
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  transition: all 0.2s;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:hover &__box {
+    box-shadow: 0 0 0 2px var(--primary-color);
+  }
+
+  &__input {
+    position: absolute;
+    appearance: none;
+  }
+  &__box {
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    margin-top: 3px;
+    overflow: hidden;
+    border-radius: 2px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    box-shadow: 0 0 0 1px var(--color-gray-7);
+    margin-right: 10px;
+    transition: all 0.2s;
+  }
+
+  &__label {
+    max-width: 90%;
+    box-sizing: border-box;
+  }
+
+  &__input:focus + &__box,
+  &__input:focus:checked + &__box {
+    box-shadow: 0 0 0 1px var(--primary-color);
+  }
+  &__input:checked + &__box {
+    box-shadow: 0 0 0 1px var(--primary-color);
+    background-color: var(--primary-color);
+    background-image: url('./check.svg');
+    background-size: 80%;
+    background-position: 45% 50%;
+    background-repeat: no-repeat;
+  }
+}
+
+.error {
+  margin: 2px 0 0 0;
+  padding: 0;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--highlight-color);
+}

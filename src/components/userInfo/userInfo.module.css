@@ -7,6 +7,10 @@
   position: relative;
 }
 
+a:hover .user__name {
+  text-decoration: underline;
+}
+
 .user__name {
   font-size: 18px;
   line-height: 28px;

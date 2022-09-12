@@ -2,12 +2,13 @@ import { FC } from 'react'
 import { format } from 'date-fns'
 
 import { IAuthtor } from '../../models/articles'
+import { IUser } from '../../models/user'
 import avatar from '../../assets/img/avatar.svg'
 
 import styles from './userInfo.module.css'
 
 interface UserInfoProps {
-  user: IAuthtor
+  user: IAuthtor | IUser
   createdAt?: Date | undefined
 }
 

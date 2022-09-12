@@ -16,3 +16,17 @@ export interface IArticle {
   favoritesCount: number
   author: IAuthtor
 }
+
+export type IArticleFormData = {
+  title: string
+  description: string
+  body: string
+  tagList: { value: string }[]
+}
+
+export type IArticlePostData = {
+  title: string
+  description: string
+  body: string
+  tagList: string[]
+}

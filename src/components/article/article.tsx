@@ -1,11 +1,9 @@
-// import { useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
 
 import useAuth from '../../context/authContext'
 import useFetch from '../../hooks/useFetching'
 import { IArticle } from '../../models/articles'
-// import authHeader from '../../services/authHeader'
 import ErrorMessage from '../errorMessage/errorMessge'
 import TagList from '../tagList/tagList'
 import Like from '../UI/like/like'
@@ -20,7 +18,25 @@ function Article() {
 
   const { user, loadingInitial } = useAuth()
 
-  const [data, status, errorMessage] = useFetch<{ article: IArticle }>(`/articles/${params.slug}`)
+  const [data, status, errorMessage, setData] = useFetch<{ article: IArticle }>(`/articles/${params.slug}`)
+
+  const likeHandler = () => {
+    setData((oldData) => {
+      if (oldData) {
+        const {
+          article: { favorited, favoritesCount },
+        } = oldData
+        return {
+          article: {
+            ...oldData.article,
+            favorited: !favorited,
+            favoritesCount: favorited ? favoritesCount - 1 : favoritesCount + 1,
+          },
+        }
+      }
+      return oldData
+    })
+  }
 
   if (status === 'error') {
     return <ErrorMessage button="Go back">{errorMessage}</ErrorMessage>
@@ -28,13 +44,13 @@ function Article() {
 
   if (data) {
     const {
-      article: { title, favoritesCount, author, createdAt, tagList, description, body },
+      article: { title, favoritesCount, author, createdAt, tagList, description, body, favorited, slug },
     } = data
     return (
       <article className={styles.article}>
         <header className={styles.header}>
           <h5 className={styles.title}>{title}</h5>
-          <Like count={favoritesCount} />
+          <Like count={favoritesCount} isFavorite={favorited} likeHandler={likeHandler} slug={slug} />
           <div className={styles.authtor}>
             <UserInfo user={author} createdAt={createdAt} />
           </div>

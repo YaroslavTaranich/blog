@@ -34,7 +34,29 @@ function ArticlesList() {
     [page]
   )
 
-  const [data, status, errorMessage] = useFetch<ArticlesListFetch>('/articles', fetchConfg)
+  const [data, status, errorMessage, setData] = useFetch<ArticlesListFetch>('/articles', fetchConfg)
+
+  const likeHandler = (slug: string) => {
+    setData((oldData) => {
+      if (oldData) {
+        return {
+          ...oldData,
+          articles: oldData.articles.map((article) => {
+            if (article.slug === slug) {
+              const { favorited, favoritesCount } = article
+              return {
+                ...article,
+                favorited: !favorited,
+                favoritesCount: favorited ? favoritesCount - 1 : favoritesCount + 1,
+              }
+            }
+            return article
+          }),
+        }
+      }
+      return oldData
+    })
+  }
 
   if (status === 'error') {
     return <ErrorMessage button="Go back!">{errorMessage}</ErrorMessage>
@@ -54,7 +76,7 @@ function ArticlesList() {
         <ul className={styles.list}>
           {articles.map((a) => (
             <li key={a.slug} className={styles.list__item}>
-              <ArticleShort article={a} />
+              <ArticleShort article={a} likeHandler={likeHandler} />
             </li>
           ))}
         </ul>

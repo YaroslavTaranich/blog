@@ -18,3 +18,19 @@
   font-size: 12px;
   color: var(--text-color);
 }
+
+.liked .button {
+  background: url(./favorite.svg) 50% 50% no-repeat;
+}
+
+.error {
+  margin-left: 10px;
+  padding: 0;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--error-color)
+}
+
+.disabled .button {
+  cursor: not-allowed;
+}

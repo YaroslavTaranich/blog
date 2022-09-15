@@ -10,18 +10,19 @@ import styles from './articleShort.module.css'
 
 interface ArticleShortProps {
   article: IArticle
+  likeHandler: (slug: string) => void
 }
 
-const ArticleShort: FC<ArticleShortProps> = ({ article }) => {
-  const { title, description, favoritesCount, author, tagList, createdAt } = article
+const ArticleShort: FC<ArticleShortProps> = ({ article, likeHandler }) => {
+  const { title, description, favoritesCount, author, tagList, createdAt, favorited, slug } = article
 
   return (
     <>
       <header className={styles.header}>
-        <Link to={`${article.slug}`} className={styles.title}>
+        <Link to={`${slug}`} className={styles.title}>
           {title}
         </Link>
-        <Like count={favoritesCount} />
+        <Like count={favoritesCount} isFavorite={favorited} slug={slug} likeHandler={likeHandler} />
       </header>
       <TagList tags={tagList} />
       <div className={styles.description}>{description}</div>

@@ -1,5 +1,4 @@
-// import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
@@ -24,14 +23,21 @@ const resolver = yupResolver(singIpSchema)
 
 function Profile() {
   const { updateUser, loading, error, user } = useAuth()
-  const onSubmit = (data: ProfileData) => updateUser(data)
-  const navigete = useNavigate()
+  const [success, setSuccess] = useState(false)
+  const onSubmit = (data: ProfileData) => {
+    updateUser(data)
+    setSuccess(true)
+  }
+
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => setSuccess(false), 4321)
+    }
+  }, [success])
 
   const errorMessage = error ? <p className={styles.error}>{error}</p> : null
 
-  const token = localStorage.getItem('token')
-
-  if (!token) navigete('/')
+  const successMessage = success ? <p className={styles.success}>Successfully updated!</p> : null
 
   return (
     <section>
@@ -47,9 +53,12 @@ function Profile() {
 
           <Input name="email" placeholder="Email address" label="Email address" />
 
-          <Input name="password" placeholder="Password" label="Password" type="password" />
+          <Input name="password" placeholder="New password" label="New password" type="password" />
 
           <Input name="image" placeholder="Avatar image" label="Avatar image (url)" />
+
+          {successMessage}
+
           <Button submit loading={loading}>
             Save
           </Button>

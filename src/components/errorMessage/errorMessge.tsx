@@ -16,8 +16,7 @@ const ErrorMessage: FC<ErrorMessageProps> = ({ children, button }) => {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Something went wrong :(</h2>
-      {children && <p className={styles.message}>Status: {children}</p>}
-      <p className={styles.message}>Try again later!</p>
+      {children && <p className={styles.message}>{children}</p>}
       {button && (
         <Button
           type="danger"

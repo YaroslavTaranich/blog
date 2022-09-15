@@ -1,17 +1,17 @@
 .container {
-    width: 400px;
-    background-color: var(--background-color-base);
-    margin: 40px auto;
-    padding: 20px;
-    box-sizing: border-box;
-    border: 1px solid var(--error-color);
-    border-radius: 5px;
-    text-align: center;
+  width: 400px;
+  background-color: var(--background-color-base);
+  margin: 40px auto;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 1px solid var(--error-color);
+  border-radius: 5px;
+  text-align: center;
 }
 
 .title {
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 28px;
-    color: var(--info-color)
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--info-color);
 }

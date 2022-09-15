@@ -52,4 +52,17 @@ export default class ArticleService {
       })
     return article
   }
+
+  likeArticle = async (slug: string | undefined, isFavorite: boolean | undefined): Promise<boolean> => {
+    const config = {
+      method: isFavorite ? 'delete' : 'post',
+      url: `articles/${slug}/favorite`,
+      ...authHeader(),
+    }
+    return axios(config)
+      .then(() => true)
+      .catch((e) => {
+        throw e
+      })
+  }
 }

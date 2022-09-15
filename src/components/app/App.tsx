@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
+import './App.css'
 import { AuthProvider } from '../../context/authContext'
 import ArticlesList from '../articlesList/articlesList'
 import Article from '../article/article'
 import Header from '../header/header'
-import './App.css'
 import SignIn from '../../pages/singIn'
 import SignUp from '../../pages/singUp'
 import Profile from '../../pages/profile'

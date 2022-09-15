@@ -4,8 +4,8 @@ import { AxiosError } from 'axios'
 
 import { IUser } from '../models/user'
 import { IUserResponse, ServerErrorResponse } from '../models/responnse'
+import authHeader from '../utils/authHeader'
 
-import authHeader from './authHeader'
 import axios from './axios'
 
 export default class UserServise {

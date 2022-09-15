@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 
-import UserForm, { IServerErrors } from '../components/UserForm/UserForm'
+import UserForm from '../components/UserForm/UserForm'
+import singIpSchema from '../schemes/singIpSchema'
 import Input from '../components/UI/Input/Input'
 import Button from '../components/UI/button/button'
 import Checkbox from '../components/UI/checkbox/checkbox'
 import useAuth from '../context/authContext'
+import MakeFormErrors from '../utils/makeFormErrorsFromServer'
 
 import styles from './pages.module.css'
 
@@ -15,42 +16,6 @@ type SignUpData = {
   username: string
   email: string
   password: string
-}
-
-const singIpSchema = Yup.object()
-  .shape({
-    username: Yup.string()
-      .min(3, 'Username must be more then 3 simbols')
-      .max(20, 'Username must be less then 20 characters.')
-      .required('Username is reqrequired'),
-    email: Yup.string().email('Email address is invalid').required('Email address is required'),
-    password: Yup.string()
-      .min(6, 'Your password needs to be at least 6 characters.')
-      .max(40, 'Your password needs to be less then 40 characters.')
-      .required('Password is required'),
-    repeat_password: Yup.string()
-      .oneOf([Yup.ref('password')], 'Passwords does not match')
-      .required('Repeat password is required'),
-    policy: Yup.boolean().oneOf([true], 'Agreement is required'),
-  })
-  .required()
-
-const resolver = yupResolver(singIpSchema)
-
-const MakeFormErrors = (serverErrors: { [key: string]: string }) => {
-  const res = Object.keys(serverErrors).reduce<IServerErrors<SignUpData>[]>((acc, key) => {
-    if (key === 'email' || key === 'password' || key === 'username') {
-      acc.push({
-        name: key,
-        option: {
-          type: 'server',
-          message: `${key} ${serverErrors[key]}`,
-        },
-      })
-    }
-    return acc
-  }, [])
-  return res
 }
 
 function SignUp() {
@@ -71,7 +36,7 @@ function SignUp() {
       <UserForm<SignUpData>
         onSubmit={onSubmit}
         className={styles.sign_form}
-        resolver={resolver}
+        resolver={yupResolver(singIpSchema)}
         serverErrors={error && MakeFormErrors(error)}
       >
         <h2 className={styles.title}>Sign Up</h2>

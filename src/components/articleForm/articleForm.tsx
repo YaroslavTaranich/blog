@@ -1,12 +1,12 @@
 import { FC } from 'react'
 import { FieldError, useFieldArray, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as Yup from 'yup'
 
 import Input from '../UI/Input/Input'
 import Textarea from '../UI/textarea/textarea'
 import Button from '../UI/button/button'
-import { IArticleFormData, IArticlePostData } from '../../models/articles'
+import { IArticleFormData } from '../../models/articles'
+import articleFormSchema from '../../schemes/articleFormSchema'
 
 import styles from './articleForm.module.css'
 
@@ -16,36 +16,7 @@ interface ArticleFormProps {
   title: string
 }
 
-export const formatDataToPost = (data: IArticleFormData): IArticlePostData => ({
-  title: data.title,
-  description: data.description,
-  body: data.body,
-  tagList: data.tagList.map((tag) => tag.value),
-})
-
-export const formatFetchedToData = (data: IArticlePostData): IArticleFormData => ({
-  title: data.title,
-  description: data.description,
-  body: data.body,
-  tagList: data.tagList.map((tag) => ({
-    value: tag,
-  })),
-})
-
-const singUpSchema = Yup.object()
-  .shape({
-    title: Yup.string().required('Title is required'),
-    description: Yup.string().required('Short description is required'),
-    body: Yup.string().required('Text is required'),
-    tagList: Yup.array().of(
-      Yup.object().shape({
-        value: Yup.string().min(1).required(),
-      })
-    ),
-  })
-  .required()
-
-const resolver = yupResolver(singUpSchema)
+const resolver = yupResolver(articleFormSchema)
 
 const ArticleForm: FC<ArticleFormProps> = ({ title, defaultValues, onSubmit }) => {
   const {

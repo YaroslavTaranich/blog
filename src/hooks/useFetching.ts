@@ -1,7 +1,7 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
-import authHeader from '../services/authHeader'
+import authHeader from '../utils/authHeader'
 import axios from '../services/axios'
 
 type StatusType = 'resolved' | 'loading' | 'error'

@@ -2,11 +2,12 @@ import { AxiosError } from 'axios'
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
-import ArticleForm, { formatDataToPost } from '../components/articleForm/articleForm'
+import ArticleForm from '../components/articleForm/articleForm'
 import ErrorMessage from '../components/errorMessage/errorMessge'
 import Spinner from '../components/UI/spinner/spinner'
 import { IArticle, IArticleFormData } from '../models/articles'
 import ArticleService from '../services/ArticleServise'
+import { formatDataToPost } from '../utils/formatFromFormToFetch'
 
 const defaultValues: IArticleFormData = {
   title: '',

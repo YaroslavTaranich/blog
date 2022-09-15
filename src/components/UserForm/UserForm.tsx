@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect } from 'react'
-import { useForm, DeepPartial, Path } from 'react-hook-form'
+import { useForm, DeepPartial, Path, Resolver, FieldValues } from 'react-hook-form'
 
-interface UserFormProps<T> {
+interface UserFormProps<T extends FieldValues> {
   onSubmit: (data: T) => void
   children: (ReactElement | null)[]
   className: string
-  resolver: any
+  resolver: Resolver<T> | undefined
   defaultValues?: DeepPartial<T>
   serverErrors?: IServerErrors<T>[]
 }

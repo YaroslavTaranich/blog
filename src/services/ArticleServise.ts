@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { IArticlePostData, IArticle } from '../models/articles'
 import { IArticlesResponce, IArticleResponce } from '../models/responnse'
+import authHeader from '../utils/authHeader'
 
-import authHeader from './authHeader'
 import axios from './axios'
 
 export default class ArticleService {

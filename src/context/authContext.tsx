@@ -12,14 +12,14 @@ interface AuthContextType {
   login: (email: string, password: string) => void
   createUser: (email: string, name: string, password: string) => void
   logout: () => void
-  updateUser: (data: Partial<IUser>) => void
+  updateUser: (data: Partial<IUser>) => Promise<boolean>
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 
 export function AuthProvider({ children }: { children: ReactNode }): JSX.Element {
   const [user, setUser] = useState<IUser>()
-  const [error, setError] = useState<any>()
+  const [error, setError] = useState<Error | null>()
   const [loading, setLoading] = useState<boolean>(false)
   const [loadingInitial, setLoadingInitial] = useState<boolean>(true)
 
@@ -48,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
 
   function login(email: string, password: string) {
     setLoading(true)
+    setError(undefined)
 
     userServise
       .loginUser(email, password)
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
 
   function createUser(username: string, email: string, password: string) {
     setLoading(true)
+    setError(undefined)
 
     userServise
       .createUser(username, email, password)
@@ -87,13 +89,19 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
 
   function updateUser(userData: Partial<IUser>) {
     setLoading(true)
+    setError(undefined)
 
-    userServise
+    return userServise
       .editCurrentUser(userData)
       .then((currentUser) => {
         setUser(currentUser)
+        return true
       })
-      .catch((e) => setError(e.message))
+      .catch((e) => {
+        const { errors } = e.response.data
+        setError(errors)
+        return false
+      })
       .finally(() => setLoading(false))
   }
 

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Link } from 'react-router-dom'
 
 import UserInfo from '../userInfo/userInfo'
-import TagList from '../tagList/tagList'
+import TagList from '../UI/tagList/tagList'
 import Like from '../UI/like/like'
 import { IArticle } from '../../models/articles'
 

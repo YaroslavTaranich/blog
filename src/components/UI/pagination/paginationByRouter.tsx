@@ -21,7 +21,7 @@ const getPagesNumbers = (currentPage: number, totalPages: number): number[] => {
   return res
 }
 
-const Pagination: FC<PaginationProps> = ({ totalPages, origin }) => {
+const PaginationByRouter: FC<PaginationProps> = ({ totalPages, origin }) => {
   const { page } = useParams()
   const currentPage = Number(page)
   const pageButtons = getPagesNumbers(Number(page), totalPages)
@@ -88,4 +88,4 @@ const Pagination: FC<PaginationProps> = ({ totalPages, origin }) => {
   )
 }
 
-export default Pagination
+export default PaginationByRouter

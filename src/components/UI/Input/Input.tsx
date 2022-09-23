@@ -1,9 +1,9 @@
 import { InputHTMLAttributes } from 'react'
-import { FieldError, Path, RegisterOptions, UseFormRegister } from 'react-hook-form'
+import { FieldError, FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form'
 
 import styles from './input.module.css'
 
-interface InputProps<T> extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps<T extends FieldValues> extends InputHTMLAttributes<HTMLInputElement> {
   name: Path<T>
   label?: string
   register?: UseFormRegister<T> | null

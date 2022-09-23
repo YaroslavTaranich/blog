@@ -1,9 +1,9 @@
 import { TextareaHTMLAttributes } from 'react'
-import { FieldError, Path, RegisterOptions, UseFormRegister } from 'react-hook-form'
+import { FieldError, FieldValues, Path, RegisterOptions, UseFormRegister } from 'react-hook-form'
 
 import styles from './textarea.module.css'
 
-interface TextareaProps<T> extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextareaProps<T extends FieldValues> extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   name: Path<T>
   label?: string
   register?: UseFormRegister<T> | null

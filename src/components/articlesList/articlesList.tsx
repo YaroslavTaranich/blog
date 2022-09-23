@@ -1,70 +1,40 @@
-import { useMemo } from 'react'
+import { useEffect } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 
-import useFetch from '../../hooks/useFetching'
-// import authHeader from '../../services/authHeader'
-import { IArticle } from '../../models/articles'
 import Spinner from '../UI/spinner/spinner'
-import Pagination from '../UI/pagination/pagination'
+import PaginationByRouter from '../UI/pagination/paginationByRouter'
 import ArticleShort from '../articleShort/articleShort'
 import ErrorMessage from '../errorMessage/errorMessge'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
+import { getArticlesByPage, toggleFavoriteArticle } from '../../redux/slices/articlesSlice'
+import { getArticlesList } from '../../redux/selectors/articleSelectors'
 
 import styles from './articlesList.module.css'
 
 const perPage = 5
 
-interface ArticlesListFetch {
-  articles: IArticle[]
-  articlesCount: number
-}
-
 function ArticlesList() {
   const { page } = useParams()
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { bySlug, allSlugs, status, articlesCount } = useAppSelector(getArticlesList)
 
-  if (Number.isNaN(Number(page))) navigate('/not-found')
+  useEffect(() => {
+    if (Number.isNaN(Number(page))) navigate('/not-found')
+    const params = {
+      offset: Number(page) * perPage - perPage,
+      limit: perPage,
+    }
+    dispatch(getArticlesByPage(params))
+  }, [page])
 
-  const fetchConfg = useMemo(
-    () => ({
-      params: {
-        offset: Number(page) * perPage - perPage,
-        limit: perPage,
-      },
-    }),
-    [page]
-  )
-
-  const [data, status, errorMessage, setData] = useFetch<ArticlesListFetch>('/articles', fetchConfg)
-
-  const likeHandler = (slug: string) => {
-    setData((oldData) => {
-      if (oldData) {
-        return {
-          ...oldData,
-          articles: oldData.articles.map((article) => {
-            if (article.slug === slug) {
-              const { favorited, favoritesCount } = article
-              return {
-                ...article,
-                favorited: !favorited,
-                favoritesCount: favorited ? favoritesCount - 1 : favoritesCount + 1,
-              }
-            }
-            return article
-          }),
-        }
-      }
-      return oldData
-    })
-  }
+  const likeHandler = (slug: string) => dispatch(toggleFavoriteArticle({ slug, isFavorite: bySlug[slug].favorited }))
 
   if (status === 'error') {
-    return <ErrorMessage button="Go back!">{errorMessage}</ErrorMessage>
+    return <ErrorMessage button="Go back!">Failed to load articles! Try again later! :(</ErrorMessage>
   }
 
-  if (data) {
-    const { articlesCount, articles } = data
-
+  if (allSlugs.length > 0 && articlesCount) {
     const totalCount = Math.ceil(articlesCount / perPage)
 
     if (Math.ceil(articlesCount / perPage) < Number(page)) {
@@ -74,13 +44,13 @@ function ArticlesList() {
     return (
       <div className={styles.container}>
         <ul className={styles.list}>
-          {articles.map((a) => (
-            <li key={a.slug} className={styles.list__item}>
-              <ArticleShort article={a} likeHandler={likeHandler} />
+          {allSlugs.map((slug: string) => (
+            <li key={slug} className={styles.list__item}>
+              <ArticleShort article={bySlug[slug]} likeHandler={likeHandler} />
             </li>
           ))}
         </ul>
-        <Pagination totalPages={totalCount} origin="/articles/" />
+        <PaginationByRouter totalPages={totalCount} origin="/articles/" />
       </div>
     )
   }

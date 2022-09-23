@@ -1,44 +1,46 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import UserForm from '../components/UserForm/UserForm'
 import profileSchema from '../schemes/profileSchema'
 import Input from '../components/UI/Input/Input'
 import Button from '../components/UI/button/button'
-import useAuth from '../context/authContext'
-import { IUser } from '../models/user'
+import { IUserFormData } from '../models/user'
 import MakeFormErrors from '../utils/makeFormErrorsFromServer'
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
+import { clearError, setSuccess, updateProfile } from '../redux/slices/userSlice'
+import getUserData from '../redux/selectors/userSelector'
 
 import styles from './pages.module.css'
 
-type ProfileData = Partial<IUser>
-
 function Profile() {
-  const { updateUser, loading, error, user } = useAuth()
-  const [success, setSuccess] = useState(false)
-  const onSubmit = (data: ProfileData) => {
-    updateUser(data).then((res) => setSuccess(res))
-  }
+  const { info, status, error } = useAppSelector(getUserData)
+  const dispatch = useAppDispatch()
+
+  const onSubmit = (data: IUserFormData) => dispatch(updateProfile(data))
 
   useEffect(() => {
-    if (success) {
-      setTimeout(() => setSuccess(false), 4321)
+    if (status === 'updated') {
+      setTimeout(() => dispatch(setSuccess()), 4321)
     }
-  }, [success])
+  }, [status])
 
-  const successMessage = success ? <p className={styles.success}>Successfully updated!</p> : null
+  useEffect(() => {
+    dispatch(clearError())
+  }, [])
+
+  const successMessage = status === 'updated' ? <p className={styles.success}>Successfully updated!</p> : null
 
   return (
     <section>
-      {user && (
-        <UserForm<ProfileData>
+      {info && (
+        <UserForm<IUserFormData>
+          title="Edit Profile"
           onSubmit={onSubmit}
-          className={styles.sign_form}
           resolver={yupResolver(profileSchema)}
-          defaultValues={user}
+          defaultValues={info}
           serverErrors={error && MakeFormErrors(error)}
         >
-          <h2 className={styles.title}>Edit Profile</h2>
           <Input name="username" placeholder="Username" label="Username" />
 
           <Input name="email" placeholder="Email address" label="Email address" />
@@ -49,7 +51,7 @@ function Profile() {
 
           {successMessage}
 
-          <Button submit loading={loading}>
+          <Button submit loading={status === 'loading'}>
             Save
           </Button>
         </UserForm>

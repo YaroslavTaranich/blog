@@ -1,16 +1,20 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useForm, DeepPartial, Path, Resolver, FieldValues } from 'react-hook-form'
 
+import FormTitle from '../UI/formTitle/formTitle'
+
+import styles from './userForm.module.css'
+
 interface UserFormProps<T extends FieldValues> {
   onSubmit: (data: T) => void
   children: (ReactElement | null)[]
-  className: string
+  title: string
   resolver: Resolver<T> | undefined
   defaultValues?: DeepPartial<T>
-  serverErrors?: IServerErrors<T>[]
+  serverErrors?: IServerError<T>[]
 }
 
-export interface IServerErrors<T> {
+export interface IServerError<T> {
   name: Path<T>
   option: {
     type: 'server'
@@ -21,8 +25,8 @@ export interface IServerErrors<T> {
 const UserForm = <T extends Record<string, unknown>>({
   children,
   onSubmit,
-  className,
   resolver,
+  title,
   defaultValues,
   serverErrors,
   ...rest
@@ -34,16 +38,17 @@ const UserForm = <T extends Record<string, unknown>>({
     formState: { errors },
   } = useForm<T>({ defaultValues, resolver })
 
-  function serverErrorsHandler(e: IServerErrors<T>[] | undefined) {
+  function setServerErrors(e: IServerError<T>[] | undefined) {
     if (e) e.map((error) => setError(error.name, error.option))
   }
 
   useEffect(() => {
-    serverErrorsHandler(serverErrors)
+    setServerErrors(serverErrors)
   }, [serverErrors])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={className} {...rest}>
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.user_form} {...rest}>
+      <FormTitle>{title}</FormTitle>
       {React.Children.map(children, (child) => {
         if (child && child.props.name)
           return React.createElement(child.type, {

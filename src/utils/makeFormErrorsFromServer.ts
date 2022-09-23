@@ -1,13 +1,9 @@
 import { Path } from 'react-hook-form'
 
-import { IServerErrors } from '../components/UserForm/UserForm'
-import { IUser } from '../models/user'
+import { IServerError } from '../components/UserForm/UserForm'
+import { IUserError } from '../models/user'
 
-interface ErrorData extends Partial<IUser> {
-  'email or password': string
-}
-
-const makeError = (name: Path<ErrorData>, message: string): IServerErrors<ErrorData> => ({
+const makeError = (name: Path<IUserError>, message: string): IServerError<IUserError> => ({
   name,
   option: {
     type: 'server',
@@ -15,12 +11,12 @@ const makeError = (name: Path<ErrorData>, message: string): IServerErrors<ErrorD
   },
 })
 
-const MakeFormErrors = (serverErrors: ErrorData) => {
+const MakeFormErrors = (serverErrors: IUserError) => {
   if (serverErrors['email or password']) {
     return [makeError('email', 'email or password is invalid'), makeError('password', 'email or password is invalid')]
   }
-  const res = Object.keys(serverErrors).reduce<IServerErrors<ErrorData>[]>((acc, key) => {
-    acc.push(makeError(key as Path<ErrorData>, `${key} ${serverErrors[key as Path<ErrorData>]}`))
+  const res = Object.keys(serverErrors).reduce<IServerError<IUserError>[]>((acc, key) => {
+    acc.push(makeError(key as Path<IUserError>, `${key} ${serverErrors[key as Path<IUserError>]}`))
 
     return acc
   }, [])

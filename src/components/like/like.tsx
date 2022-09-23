@@ -1,7 +1,8 @@
 import { FC, useState } from 'react'
 
-import useAuth from '../../../context/authContext'
-import ArticleService from '../../../services/ArticleServise'
+import { useAppSelector } from '../../hooks/reduxHooks'
+import getUserData from '../../redux/selectors/userSelector'
+import ArticleService from '../../services/ArticleServise'
 
 import styles from './like.module.css'
 
@@ -13,22 +14,22 @@ interface LikeProps {
 }
 
 const Like: FC<LikeProps> = ({ count, likeHandler, isFavorite, slug }) => {
-  const { user, loadingInitial } = useAuth()
+  const { info, loadingInitial } = useAppSelector(getUserData)
   const [likeError, setLikeError] = useState(false)
 
   const classNames = [styles.like]
 
-  if (user && isFavorite) {
+  if (info && isFavorite) {
     classNames.push(styles.liked)
   }
-  if (!user && !loadingInitial) {
+  if (!info && !loadingInitial) {
     classNames.push(styles.disabled)
   }
 
   const { likeArticle } = new ArticleService()
 
   const onClick = () => {
-    if (user && !loadingInitial) {
+    if (info && !loadingInitial) {
       setLikeError(false)
       likeArticle(slug, isFavorite)
         .then(() => {

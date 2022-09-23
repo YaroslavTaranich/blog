@@ -1,12 +1,12 @@
-import { AxiosError } from 'axios'
-import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
 import ArticleForm from '../components/articleForm/articleForm'
 import ErrorMessage from '../components/errorMessage/errorMessge'
 import Spinner from '../components/UI/spinner/spinner'
-import { IArticle, IArticleFormData } from '../models/articles'
-import ArticleService from '../services/ArticleServise'
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
+import { IArticleFormData } from '../models/articles'
+import { getCurrentArticle } from '../redux/selectors/articleSelectors'
+import { createNewArticle } from '../redux/slices/articlesSlice'
 import { formatDataToPost } from '../utils/formatFromFormToFetch'
 
 const defaultValues: IArticleFormData = {
@@ -16,29 +16,19 @@ const defaultValues: IArticleFormData = {
   tagList: [],
 }
 
-const articleServise = new ArticleService()
-
 const NewArticle = () => {
-  const [article, setArticle] = useState<IArticle | null>(null)
-  const [error, setError] = useState<AxiosError>()
-  const [loading, setLoading] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
+  const { article, status } = useAppSelector(getCurrentArticle)
 
   const onSubmit = (data: IArticleFormData) => {
-    setLoading(true)
-    articleServise
-      .postArticle(formatDataToPost(data))
-      .then((res) => {
-        setArticle(res)
-      })
-      .catch((e) => setError(e))
-      .finally(() => setLoading(false))
+    dispatch(createNewArticle(formatDataToPost(data)))
   }
 
-  if (loading) return <Spinner />
+  if (status === 'loading') return <Spinner />
 
-  if (error) return <ErrorMessage button="To articles">Opps..</ErrorMessage>
+  if (status === 'error') return <ErrorMessage button="To articles">Opps.. Smoething went wrong! :(</ErrorMessage>
 
-  if (article) return <Navigate to={`/articles/1/${article.slug}`} />
+  if (status === 'created') return <Navigate to={`/articles/1/${article.slug}`} />
 
   return <ArticleForm title="Create new article" defaultValues={defaultValues} onSubmit={onSubmit} />
 }

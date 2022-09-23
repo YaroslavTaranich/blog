@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import UserInfo from '../userInfo/userInfo'
 import TagList from '../UI/tagList/tagList'
-import Like from '../UI/like/like'
+import Like from '../like/like'
 import { IArticle } from '../../models/articles'
 
 import styles from './articleShort.module.css'

@@ -1,51 +1,42 @@
+import { useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 
-import useAuth from '../../context/authContext'
-import useFetch from '../../hooks/useFetching'
-import { IArticle } from '../../models/articles'
 import ErrorMessage from '../errorMessage/errorMessge'
 import TagList from '../UI/tagList/tagList'
-import Like from '../UI/like/like'
+import Like from '../like/like'
 import Spinner from '../UI/spinner/spinner'
 import UserInfo from '../userInfo/userInfo'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
+import getUserData from '../../redux/selectors/userSelector'
+import { getArticleBySlug, toggleFavoriteArticle } from '../../redux/slices/articlesSlice'
+import { getCurrentArticle } from '../../redux/selectors/articleSelectors'
 
-import styles from './article.module.css'
 import ArtileControls from './articleControls'
+import styles from './article.module.css'
 
 function Article() {
   const params = useParams()
+  const dispatch = useAppDispatch()
 
-  const { user, loadingInitial } = useAuth()
+  const { article, status } = useAppSelector(getCurrentArticle)
 
-  const [data, status, errorMessage, setData] = useFetch<{ article: IArticle }>(`/articles/${params.slug}`)
+  const { info, loadingInitial } = useAppSelector(getUserData)
 
-  const likeHandler = () => {
-    setData((oldData) => {
-      if (oldData) {
-        const {
-          article: { favorited, favoritesCount },
-        } = oldData
-        return {
-          article: {
-            ...oldData.article,
-            favorited: !favorited,
-            favoritesCount: favorited ? favoritesCount - 1 : favoritesCount + 1,
-          },
-        }
-      }
-      return oldData
-    })
-  }
+  useEffect(() => {
+    if (params.slug) dispatch(getArticleBySlug(params.slug))
+  }, [params.slug])
+
+  const likeHandler = () => dispatch(toggleFavoriteArticle({ slug: article.slug, isFavorite: article.favorited }))
 
   if (status === 'error') {
-    return <ErrorMessage button="Go back">{errorMessage}</ErrorMessage>
+    return <ErrorMessage button="Go back">Failed to load an article!</ErrorMessage>
   }
 
-  if (data) {
-    const {
-      article: { title, favoritesCount, author, createdAt, tagList, description, body, favorited, slug },
-    } = data
+  if (status === 'deleted') return <Navigate to="/" />
+
+  if (article) {
+    const { title, favoritesCount, author, createdAt, tagList, description, body, favorited, slug } = article
     return (
       <article className={styles.article}>
         <header className={styles.header}>
@@ -54,7 +45,7 @@ function Article() {
           <div className={styles.authtor}>
             <UserInfo user={author} createdAt={createdAt} />
           </div>
-          {user && !loadingInitial && data && user.username === data.article.author.username && <ArtileControls />}
+          {info && !loadingInitial && info.username === article.author.username && <ArtileControls status={status} />}
         </header>
         <TagList tags={tagList} />
         <p className={styles.shortText}>{description}</p>
@@ -64,6 +55,7 @@ function Article() {
       </article>
     )
   }
+
   return <Spinner />
 }
 

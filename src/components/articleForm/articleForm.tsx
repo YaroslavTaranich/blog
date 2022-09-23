@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '../UI/Input/Input'
 import Textarea from '../UI/textarea/textarea'
 import Button from '../UI/button/button'
+import FormTitle from '../UI/formTitle/formTitle'
 import { IArticleFormData } from '../../models/articles'
 import articleFormSchema from '../../schemes/articleFormSchema'
 
@@ -33,7 +34,7 @@ const ArticleForm: FC<ArticleFormProps> = ({ title, defaultValues, onSubmit }) =
   return (
     <section className={styles.container}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <h1 className={styles.form_title}>{title}</h1>
+        <FormTitle>{title}</FormTitle>
         <Input<IArticleFormData>
           name="title"
           label="Title"
@@ -51,7 +52,7 @@ const ArticleForm: FC<ArticleFormProps> = ({ title, defaultValues, onSubmit }) =
         <Textarea<IArticleFormData>
           name="body"
           label="Text"
-          placeholder="Short description"
+          placeholder="Text"
           error={errors.body}
           register={register}
         />

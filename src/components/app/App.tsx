@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 import './App.css'
-import { AuthProvider } from '../../context/authContext'
 import ArticlesList from '../articlesList/articlesList'
 import Article from '../article/article'
 import Header from '../header/header'
@@ -12,10 +12,18 @@ import ErrorPage from '../../pages/errorPage'
 import NewArticle from '../../pages/newArticle'
 import EditArticle from '../../pages/editArtcle'
 import PrivateRoute from '../privateRoute/privateRoute'
+import { useAppDispatch } from '../../hooks/reduxHooks'
+import { initUser } from '../../redux/slices/userSlice'
 
 function App() {
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(initUser())
+  }, [])
+
   return (
-    <AuthProvider>
+    <>
       <Header />
       <Routes>
         <Route path="/">
@@ -38,7 +46,7 @@ function App() {
         <Route path="new-article" element={<PrivateRoute element={<NewArticle />} />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-    </AuthProvider>
+    </>
   )
 }
 

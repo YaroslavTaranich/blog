@@ -7,40 +7,38 @@ import singIpSchema from '../schemes/singIpSchema'
 import Input from '../components/UI/Input/Input'
 import Button from '../components/UI/button/button'
 import Checkbox from '../components/UI/checkbox/checkbox'
-import useAuth from '../context/authContext'
 import MakeFormErrors from '../utils/makeFormErrorsFromServer'
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
+import { clearError, signUp } from '../redux/slices/userSlice'
+import getUserData from '../redux/selectors/userSelector'
+import { ISignUpData } from '../models/user'
 
 import styles from './pages.module.css'
 
-type SignUpData = {
-  username: string
-  email: string
-  password: string
-}
-
 function SignUp() {
-  const { createUser, loading, error, user, loadingInitial } = useAuth()
+  const { info: user, error, status, loadingInitial } = useAppSelector(getUserData)
+  const dispatch = useAppDispatch()
 
-  const onSubmit = ({ username, email, password }: SignUpData) => createUser(username, email, password)
+  const onSubmit = ({ username, email, password }: ISignUpData) => dispatch(signUp({ username, email, password }))
 
   const navigete = useNavigate()
-
-  const errorMessage = error && error.message ? <p className={styles.error}>{error.message}</p> : null
 
   useEffect(() => {
     if (user && !loadingInitial) navigete('/')
   }, [user, loadingInitial])
 
+  useEffect(() => {
+    dispatch(clearError())
+  }, [])
+
   return (
     <section>
-      <UserForm<SignUpData>
+      <UserForm<ISignUpData>
         onSubmit={onSubmit}
-        className={styles.sign_form}
+        title="Sign Up"
         resolver={yupResolver(singIpSchema)}
         serverErrors={error && MakeFormErrors(error)}
       >
-        <h2 className={styles.title}>Sign Up</h2>
-
         <Input name="username" placeholder="Username" label="Username" />
 
         <Input name="email" placeholder="Email address" label="Email address" />
@@ -57,10 +55,9 @@ function SignUp() {
                   information"
         />
 
-        <Button submit loading={loading}>
+        <Button submit loading={status === 'loading'}>
           Create
         </Button>
-        {errorMessage}
 
         <p className={styles.secondary_text}>
           Already have an account?

@@ -1,6 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom'
 
-import useAuth from '../../context/authContext'
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
+import getUserData from '../../redux/selectors/userSelector'
+import { logOut } from '../../redux/slices/userSlice'
 import Button from '../UI/button/button'
 import UserInfo from '../userInfo/userInfo'
 
@@ -8,14 +10,15 @@ import styles from './header.module.css'
 
 function Header() {
   const navigate = useNavigate()
-  const { user, loadingInitial, logout } = useAuth()
+  const dispatch = useAppDispatch()
+  const { info, loadingInitial } = useAppSelector(getUserData)
 
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.title}>
         RealWorld Blog
       </Link>
-      {!user && !loadingInitial && (
+      {!info && !loadingInitial && (
         <>
           <Button
             type="ghost"
@@ -37,7 +40,7 @@ function Header() {
           </Button>
         </>
       )}
-      {user && !loadingInitial && (
+      {info && !loadingInitial && (
         <>
           <Button
             type="success"
@@ -49,9 +52,15 @@ function Header() {
             Create article
           </Button>
           <Link to="/profile">
-            <UserInfo user={user} />
+            <UserInfo user={info} />
           </Link>
-          <Button type="black" size="lg" onClick={() => logout()}>
+          <Button
+            type="black"
+            size="lg"
+            onClick={() => {
+              dispatch(logOut())
+            }}
+          >
             Log Out
           </Button>
         </>

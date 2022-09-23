@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
 
 import ArticleForm from '../components/articleForm/articleForm'
@@ -7,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
 import { IArticleFormData, IArticlePostData } from '../models/articles'
 import { getCurrentArticle } from '../redux/selectors/articleSelectors'
 import getUserData from '../redux/selectors/userSelector'
-import { updateArticle } from '../redux/slices/articlesSlice'
+import { getArticleBySlug, updateArticle } from '../redux/slices/articlesSlice'
 import { formatDataToPost, formatFetchedToData } from '../utils/formatFromFormToFetch'
 
 const EditArticle = () => {
@@ -17,6 +18,10 @@ const EditArticle = () => {
   const { article, status } = useAppSelector(getCurrentArticle)
 
   const { info, loadingInitial } = useAppSelector(getUserData)
+
+  useEffect(() => {
+    if (params.slug) dispatch(getArticleBySlug(params.slug))
+  }, [])
 
   const onSubmit = (submitingData: IArticleFormData) => {
     const updateData = {
@@ -30,9 +35,9 @@ const EditArticle = () => {
     return <ErrorMessage button="go back">You can edit only your one articles</ErrorMessage>
   }
 
-  if (status === 'error') return <ErrorMessage button="To articles">Opps..</ErrorMessage>
+  if (status === 'updated' || (!article && status === 'success')) return <Navigate to={`/articles/1/${params.slug}`} />
 
-  if (status === 'updated') return <Navigate to={`/articles/1/${article.slug}`} />
+  if (status === 'error') return <ErrorMessage button="To articles">Opps..</ErrorMessage>
 
   if (article) {
     const defaultValues: IArticlePostData = {

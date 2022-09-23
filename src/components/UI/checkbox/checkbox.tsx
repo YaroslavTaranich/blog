@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC, memo } from 'react'
 import { FieldError, FieldValues, RegisterOptions, UseFormRegister } from 'react-hook-form'
 
 import styles from './checkbox.module.scss'
@@ -37,4 +37,4 @@ Checkbox.defaultProps = {
   error: undefined,
 }
 
-export default React.memo(Checkbox)
+export default memo(Checkbox)

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useState, memo } from 'react'
 
 import { useAppSelector } from '../../hooks/reduxHooks'
 import getUserData from '../../redux/selectors/userSelector'
@@ -58,4 +58,4 @@ Like.defaultProps = {
   isFavorite: false,
 }
 
-export default Like
+export default memo(Like)

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useAppDispatch } from '../../hooks/reduxHooks'
@@ -37,4 +37,4 @@ const ArtileControls: FC<ArtileControlsProps> = ({ status }) => {
   )
 }
 
-export default ArtileControls
+export default memo(ArtileControls)

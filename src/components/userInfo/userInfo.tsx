@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { format } from 'date-fns'
 
 import { IAuthtor } from '../../models/articles'
@@ -24,4 +24,4 @@ UserInfo.defaultProps = {
   createdAt: undefined,
 }
 
-export default UserInfo
+export default memo(UserInfo)

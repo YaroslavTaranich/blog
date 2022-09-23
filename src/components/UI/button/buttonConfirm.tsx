@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useRef } from 'react'
+import { KeyboardEvent, memo, useEffect, useRef } from 'react'
 
 import styles from './button.module.scss'
 
@@ -68,4 +68,4 @@ ButtonConfirm.defaultProps = {
   yes: () => {},
 }
 
-export default ButtonConfirm
+export default memo(ButtonConfirm)

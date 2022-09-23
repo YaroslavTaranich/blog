@@ -98,6 +98,7 @@ export const userSlice = createSlice({
     setSuccess: (state) => ({
       ...state,
       status: 'success',
+      error: undefined,
     }),
     clearError: (state) => ({
       ...state,

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import styles from './pagination.module.css'
@@ -88,4 +88,4 @@ const PaginationByRouter: FC<PaginationProps> = ({ totalPages, origin }) => {
   )
 }
 
-export default PaginationByRouter
+export default memo(PaginationByRouter)

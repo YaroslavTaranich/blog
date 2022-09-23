@@ -36,6 +36,7 @@ function Profile() {
       {info && (
         <UserForm<IUserFormData>
           title="Edit Profile"
+          status={status}
           onSubmit={onSubmit}
           resolver={yupResolver(profileSchema)}
           defaultValues={info}

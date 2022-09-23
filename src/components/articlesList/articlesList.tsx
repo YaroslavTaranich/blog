@@ -6,7 +6,7 @@ import PaginationByRouter from '../UI/pagination/paginationByRouter'
 import ArticleShort from '../articleShort/articleShort'
 import ErrorMessage from '../errorMessage/errorMessge'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
-import { getArticlesByPage, toggleFavoriteArticle } from '../../redux/slices/articlesSlice'
+import { getArticlesByPage } from '../../redux/slices/articlesSlice'
 import { getArticlesList } from '../../redux/selectors/articleSelectors'
 
 import styles from './articlesList.module.css'
@@ -28,8 +28,6 @@ function ArticlesList() {
     dispatch(getArticlesByPage(params))
   }, [page])
 
-  const likeHandler = (slug: string) => dispatch(toggleFavoriteArticle({ slug, isFavorite: bySlug[slug].favorited }))
-
   if (status === 'error') {
     return <ErrorMessage button="Go back!">Failed to load articles! Try again later! :(</ErrorMessage>
   }
@@ -46,7 +44,7 @@ function ArticlesList() {
         <ul className={styles.list}>
           {allSlugs.map((slug: string) => (
             <li key={slug} className={styles.list__item}>
-              <ArticleShort article={bySlug[slug]} likeHandler={likeHandler} />
+              <ArticleShort article={bySlug[slug]} />
             </li>
           ))}
         </ul>

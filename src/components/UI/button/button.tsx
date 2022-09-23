@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, memo, useState } from 'react'
 
 import styles from './button.module.scss'
 import ButtonConfirm from './buttonConfirm'
@@ -60,4 +60,4 @@ Button.defaultProps = {
 }
 ButtonWithConfirm.defaultProps = Button.defaultProps
 
-export default Button
+export default memo(Button)

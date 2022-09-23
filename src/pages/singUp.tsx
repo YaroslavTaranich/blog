@@ -35,6 +35,7 @@ function SignUp() {
     <section>
       <UserForm<ISignUpData>
         onSubmit={onSubmit}
+        status={status}
         title="Sign Up"
         resolver={yupResolver(singIpSchema)}
         serverErrors={error && MakeFormErrors(error)}

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 
 import styles from './tagList.module.css'
 
@@ -16,4 +16,4 @@ const TagList: FC<TagListProps> = ({ tags }) => (
   </ul>
 )
 
-export default TagList
+export default memo(TagList)

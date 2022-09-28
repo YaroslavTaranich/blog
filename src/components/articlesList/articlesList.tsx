@@ -6,8 +6,7 @@ import PaginationByRouter from '../UI/pagination/paginationByRouter'
 import ArticleShort from '../articleShort/articleShort'
 import ErrorMessage from '../errorMessage/errorMessge'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
-import { getArticlesByPage } from '../../redux/slices/articlesSlice'
-import { getArticlesList } from '../../redux/selectors/articleSelectors'
+import { getArticlesByPage, artcilesSelectors, getArticlesInfo } from '../../redux/slices/articlesSlice'
 
 import styles from './articlesList.module.css'
 
@@ -17,7 +16,8 @@ function ArticlesList() {
   const { page } = useParams()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { bySlug, allSlugs, status, articlesCount } = useAppSelector(getArticlesList)
+  const articles = useAppSelector(artcilesSelectors.selectAll)
+  const { status, articlesCount } = useAppSelector(getArticlesInfo)
 
   useEffect(() => {
     if (Number.isNaN(Number(page))) navigate('/not-found')
@@ -32,28 +32,28 @@ function ArticlesList() {
     return <ErrorMessage button="Go back!">Failed to load articles! Try again later! :(</ErrorMessage>
   }
 
-  if (allSlugs.length > 0 && articlesCount) {
-    const totalCount = Math.ceil(articlesCount / perPage)
+  if (status === 'loading') return <Spinner />
 
-    if (Math.ceil(articlesCount / perPage) < Number(page)) {
-      return <Navigate to="/404" replace />
-    }
-
-    return (
-      <div className={styles.container}>
-        <ul className={styles.list}>
-          {allSlugs.map((slug: string) => (
-            <li key={slug} className={styles.list__item}>
-              <ArticleShort article={bySlug[slug]} />
-            </li>
-          ))}
-        </ul>
-        <PaginationByRouter totalPages={totalCount} origin="/articles/" />
-      </div>
-    )
+  if (articles.length > 0 && articlesCount && Math.ceil(articlesCount / perPage) < Number(page)) {
+    return <Navigate to="/404" replace />
   }
 
-  return <Spinner />
+  return (
+    <div className={styles.container}>
+      {articles.length > 0 && articlesCount && (
+        <>
+          <ul className={styles.list}>
+            {articles.map((article) => (
+              <li key={article.slug} className={styles.list__item}>
+                <ArticleShort article={article} />
+              </li>
+            ))}
+          </ul>
+          <PaginationByRouter totalPages={Math.ceil(articlesCount / perPage)} origin="/articles/" />
+        </>
+      )}
+    </div>
+  )
 }
 
 export default ArticlesList

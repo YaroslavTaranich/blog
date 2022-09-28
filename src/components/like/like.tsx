@@ -1,7 +1,7 @@
 import { FC, useState, memo } from 'react'
 
 import { useAppSelector } from '../../hooks/reduxHooks'
-import getUserData from '../../redux/selectors/userSelector'
+import { getUserData } from '../../redux/slices/userSlice'
 import ArticleService from '../../services/ArticleServise'
 
 import styles from './like.module.css'

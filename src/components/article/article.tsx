@@ -8,9 +8,13 @@ import Like from '../like/like'
 import Spinner from '../UI/spinner/spinner'
 import UserInfo from '../userInfo/userInfo'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
-import getUserData from '../../redux/selectors/userSelector'
-import { getArticleBySlug, toggleFavoriteArticle } from '../../redux/slices/articlesSlice'
-import { getCurrentArticle } from '../../redux/selectors/articleSelectors'
+import {
+  getArticleBySlug,
+  getArticlesInfo,
+  getCurrentArticle,
+  toggleFavoriteArticle,
+} from '../../redux/slices/articlesSlice'
+import { getUserData } from '../../redux/slices/userSlice'
 
 import ArtileControls from './articleControls'
 import styles from './article.module.css'
@@ -19,7 +23,8 @@ function Article() {
   const params = useParams()
   const dispatch = useAppDispatch()
 
-  const { article, status } = useAppSelector(getCurrentArticle)
+  const article = useAppSelector(getCurrentArticle)
+  const { status } = useAppSelector(getArticlesInfo)
 
   const { info, loadingInitial } = useAppSelector(getUserData)
 

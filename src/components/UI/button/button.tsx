@@ -1,4 +1,4 @@
-import { FC, memo, useState } from 'react'
+import { FC, memo, useEffect, useState } from 'react'
 
 import styles from './button.module.scss'
 import ButtonConfirm from './buttonConfirm'
@@ -24,7 +24,12 @@ const Button: FC<ButtonProps> = ({ children, onClick, size = 'md', submit, type 
   const buttonClasses = [styles.button, styles[size], styles[`button--${type}`]]
 
   return (
-    <button className={buttonClasses.join(' ')} type={submit ? 'submit' : 'button'} onClick={onClick}>
+    <button
+      className={buttonClasses.join(' ')}
+      type={submit ? 'submit' : 'button'}
+      onClick={onClick}
+      disabled={loading}
+    >
       {loading ? <ButtonLoader /> : children}
     </button>
   )
@@ -34,6 +39,10 @@ export const ButtonWithConfirm: FC<ButtonProps> = (props) => {
   const [showConfirm, setShowConfirm] = useState(false)
 
   const { children, onClick, loading } = props
+
+  useEffect(() => {
+    if (loading) setShowConfirm(false)
+  }, [loading])
 
   return (
     <div className={styles.wrapper}>

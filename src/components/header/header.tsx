@@ -2,8 +2,7 @@ import { memo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
-import getUserData from '../../redux/selectors/userSelector'
-import { logOut } from '../../redux/slices/userSlice'
+import { getUserData, logOut } from '../../redux/slices/userSlice'
 import Button from '../UI/button/button'
 import UserInfo from '../userInfo/userInfo'
 

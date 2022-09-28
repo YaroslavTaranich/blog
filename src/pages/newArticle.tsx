@@ -5,8 +5,7 @@ import ErrorMessage from '../components/errorMessage/errorMessge'
 import Spinner from '../components/UI/spinner/spinner'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
 import { IArticleFormData } from '../models/articles'
-import { getCurrentArticle } from '../redux/selectors/articleSelectors'
-import { createNewArticle } from '../redux/slices/articlesSlice'
+import { createNewArticle, getArticlesInfo, getCurrentArticle } from '../redux/slices/articlesSlice'
 import { formatDataToPost } from '../utils/formatFromFormToFetch'
 
 const defaultValues: IArticleFormData = {
@@ -18,7 +17,8 @@ const defaultValues: IArticleFormData = {
 
 const NewArticle = () => {
   const dispatch = useAppDispatch()
-  const { article, status } = useAppSelector(getCurrentArticle)
+  const article = useAppSelector(getCurrentArticle)
+  const { status } = useAppSelector(getArticlesInfo)
 
   const onSubmit = (data: IArticleFormData) => {
     dispatch(createNewArticle(formatDataToPost(data)))

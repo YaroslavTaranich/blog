@@ -3,11 +3,6 @@ import { Link, useParams } from 'react-router-dom'
 
 import styles from './pagination.module.css'
 
-interface PaginationProps {
-  totalPages: number
-  origin: string
-}
-
 const getPagesNumbers = (currentPage: number, totalPages: number): number[] => {
   let firstPage = currentPage < 4 ? 1 : currentPage - 2
   if (firstPage + 5 > totalPages && totalPages - 4 > 0) firstPage = totalPages - 4
@@ -19,6 +14,10 @@ const getPagesNumbers = (currentPage: number, totalPages: number): number[] => {
     res.push(i)
   }
   return res
+}
+interface PaginationProps {
+  totalPages: number
+  origin: string
 }
 
 const PaginationByRouter: FC<PaginationProps> = ({ totalPages, origin }) => {

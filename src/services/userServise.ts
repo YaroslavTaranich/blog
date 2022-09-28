@@ -2,7 +2,7 @@
 
 import { IUser } from '../models/user'
 import { IUserResponse } from '../models/responnse'
-import authHeader from '../utils/authHeader'
+import setAuthFromLocalToken from '../utils/setAuthFromLocalToken'
 
 import axios from './axios'
 
@@ -22,13 +22,13 @@ export default class UserServise {
   }
 
   getCurrentUser = async (): Promise<IUser> => {
-    const user = await axios.get<IUserResponse>('user', { ...authHeader() }).then((res) => res.data.user)
+    const user = await axios.get<IUserResponse>('user', { ...setAuthFromLocalToken() }).then((res) => res.data.user)
     return user
   }
 
   editCurrentUser = async (userData: Partial<IUser>): Promise<IUser> => {
     const user = await axios
-      .put<IUserResponse>('user', { user: { ...userData } }, { ...authHeader() })
+      .put<IUserResponse>('user', { user: { ...userData } }, { ...setAuthFromLocalToken() })
       .then((res) => res.data.user)
     return user
   }

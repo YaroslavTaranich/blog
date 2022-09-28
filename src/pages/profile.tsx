@@ -8,8 +8,7 @@ import Button from '../components/UI/button/button'
 import { IUserFormData } from '../models/user'
 import MakeFormErrors from '../utils/makeFormErrorsFromServer'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
-import { clearError, setSuccess, updateProfile } from '../redux/slices/userSlice'
-import getUserData from '../redux/selectors/userSelector'
+import { clearError, setSuccess, updateProfile, getUserData } from '../redux/slices/userSlice'
 
 import styles from './pages.module.css'
 

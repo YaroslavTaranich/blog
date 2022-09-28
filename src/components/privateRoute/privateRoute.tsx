@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useAppSelector } from '../../hooks/reduxHooks'
-import getUserData from '../../redux/selectors/userSelector'
+import { getUserData } from '../../redux/slices/userSlice'
 
 interface PrivateRouteProps {
   element: JSX.Element

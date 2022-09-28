@@ -8,8 +8,7 @@ import Input from '../components/UI/Input/Input'
 import Button from '../components/UI/button/button'
 import MakeFormErrors from '../utils/makeFormErrorsFromServer'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
-import { clearError, signIn } from '../redux/slices/userSlice'
-import getUserData from '../redux/selectors/userSelector'
+import { clearError, signIn, getUserData } from '../redux/slices/userSlice'
 
 import styles from './pages.module.css'
 

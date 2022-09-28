@@ -1,4 +1,4 @@
-export default function authHeader() {
+export default function setAuthFromLocalToken() {
   const token = localStorage.getItem('token')
   if (token) {
     return {

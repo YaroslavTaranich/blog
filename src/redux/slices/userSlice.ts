@@ -1,26 +1,27 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk, CaseReducer, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, CaseReducer, PayloadAction, createSelector } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 
 import { ServerErrorResponse } from '../../models/responnse'
 import { StatusType } from '../../models/status'
 import { ISignInData, ISignUpData, IUser, IUserError } from '../../models/user'
 import UserServise from '../../services/userServise'
+import type { RootState } from '../store'
 
 const { loginUser, createUser, getCurrentUser, editCurrentUser } = new UserServise()
 
 type UserState = {
-  info: IUser | undefined
+  info: IUser | null
   status: StatusType
   loadingInitial: boolean
-  error: any | undefined
+  error: any
 }
 
 const initialState: UserState = {
-  info: undefined,
-  status: undefined,
+  info: null,
+  status: 'idle',
   loadingInitial: true,
-  error: undefined,
+  error: null,
 }
 
 export const signIn = createAsyncThunk('user/signIn', async ({ email, password }: ISignInData, { rejectWithValue }) =>
@@ -47,7 +48,7 @@ export const initUser = createAsyncThunk('user/initialUser', async (params, { re
         rejectWithValue(error.response?.data.errors)
       })
   }
-  return undefined
+  return null
 })
 
 export const updateProfile = createAsyncThunk('user/updateProfile', (userData: Partial<IUser>, { rejectWithValue }) =>
@@ -64,7 +65,7 @@ const storeUser: CaseReducer<UserState, PayloadAction<IUser>> = (state, action) 
     ...state,
     status: 'success',
     info: action.payload,
-    error: undefined,
+    error: null,
   }
 }
 
@@ -74,7 +75,7 @@ const updateUser: CaseReducer<UserState, PayloadAction<IUser>> = (state, action)
     ...state,
     status: 'updated',
     info: action.payload,
-    error: undefined,
+    error: null,
   }
 }
 
@@ -98,12 +99,12 @@ export const userSlice = createSlice({
     setSuccess: (state) => ({
       ...state,
       status: 'success',
-      error: undefined,
+      error: null,
     }),
     clearError: (state) => ({
       ...state,
-      status: undefined,
-      error: undefined,
+      status: 'idle',
+      error: null,
     }),
   },
   extraReducers: (builder) => {
@@ -119,7 +120,7 @@ export const userSlice = createSlice({
 
     builder.addCase(initUser.fulfilled, (state, action) => ({
       ...state,
-      info: action.payload as IUser | undefined,
+      info: action.payload as IUser | null,
       loadingInitial: false,
     }))
     builder.addCase(initUser.rejected, (state) => ({ ...state, loadingInitial: false }))
@@ -133,3 +134,7 @@ export const userSlice = createSlice({
 export const { logOut, setSuccess, clearError } = userSlice.actions
 
 export default userSlice.reducer
+
+const getUser = (state: RootState) => state.user
+
+export const getUserData = createSelector(getUser, (user) => user)

@@ -7,4 +7,4 @@ export type StatusType =
   | 'deleting'
   | 'deleteError'
   | 'deleted'
-  | undefined
+  | 'idle'

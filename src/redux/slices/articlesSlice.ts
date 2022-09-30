@@ -105,7 +105,7 @@ function loadingArticle(articleStatus: ArticleStatus): CaseReducer<ArticleState>
 function errorArticle(articleStatus: ArticleStatus): CaseReducer<ArticleState> {
   return (state, action) => ({
     ...state,
-    fetchStatus: FetchStatus.loading,
+    fetchStatus: FetchStatus.error,
     articleStatus,
     error: action.payload,
   })

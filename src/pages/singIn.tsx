@@ -9,6 +9,7 @@ import Button from '../components/UI/button/button'
 import MakeFormErrors from '../utils/makeFormErrorsFromServer'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
 import { clearError, signIn, getUserData } from '../redux/slices/userSlice'
+import { FetchStatus } from '../models/enums'
 
 import styles from './pages.module.css'
 
@@ -18,7 +19,7 @@ type SignInData = {
 }
 
 function SignIn() {
-  const { info, status, error, loadingInitial } = useAppSelector(getUserData)
+  const { info, fetchStatus, error, loadingInitial } = useAppSelector(getUserData)
 
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -38,7 +39,7 @@ function SignIn() {
       <UserForm<SignInData>
         title="Sign In"
         onSubmit={onSubmit}
-        status={status}
+        loading={fetchStatus === FetchStatus.loading}
         resolver={yupResolver(singUpSchema)}
         serverErrors={error && MakeFormErrors(error)}
       >
@@ -46,7 +47,7 @@ function SignIn() {
 
         <Input<SignInData> name="password" placeholder="Password" label="Password" type="password" />
 
-        <Button submit loading={status === 'loading'}>
+        <Button submit loading={fetchStatus === FetchStatus.loading}>
           Login
         </Button>
 

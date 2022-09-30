@@ -2,8 +2,8 @@
 import { createSlice, createAsyncThunk, CaseReducer, PayloadAction, createSelector } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 
+import { FetchStatus, UserStatus } from '../../models/enums'
 import { ServerErrorResponse } from '../../models/responnse'
-import { StatusType } from '../../models/status'
 import { ISignInData, ISignUpData, IUser, IUserError } from '../../models/user'
 import UserServise from '../../services/userServise'
 import type { RootState } from '../store'
@@ -12,14 +12,16 @@ const { loginUser, createUser, getCurrentUser, editCurrentUser } = new UserServi
 
 type UserState = {
   info: IUser | null
-  status: StatusType
+  fetchStatus: FetchStatus
+  userStatus: UserStatus
   loadingInitial: boolean
   error: any
 }
 
 const initialState: UserState = {
   info: null,
-  status: 'idle',
+  fetchStatus: FetchStatus.loading,
+  userStatus: UserStatus.idle,
   loadingInitial: true,
   error: null,
 }
@@ -57,13 +59,14 @@ export const updateProfile = createAsyncThunk('user/updateProfile', (userData: P
     .catch((error: AxiosError<ServerErrorResponse>) => rejectWithValue(error.response?.data.errors))
 )
 
-const loadingUser: CaseReducer<UserState> = (state) => ({ ...state, status: 'loading' })
+const loadingUser: CaseReducer<UserState> = (state) => ({ ...state, fetchStatus: FetchStatus.loading })
 
 const storeUser: CaseReducer<UserState, PayloadAction<IUser>> = (state, action) => {
   localStorage.setItem('token', action.payload.token)
   return {
     ...state,
-    status: 'success',
+    fetchStatus: FetchStatus.success,
+    userStatus: UserStatus.idle,
     info: action.payload,
     error: null,
   }
@@ -73,7 +76,8 @@ const updateUser: CaseReducer<UserState, PayloadAction<IUser>> = (state, action)
   localStorage.setItem('token', action.payload.token)
   return {
     ...state,
-    status: 'updated',
+    fetchStatus: FetchStatus.success,
+    userStatus: UserStatus.update,
     info: action.payload,
     error: null,
   }
@@ -81,7 +85,8 @@ const updateUser: CaseReducer<UserState, PayloadAction<IUser>> = (state, action)
 
 const errorUser: CaseReducer<UserState, PayloadAction<unknown>> = (state, action) => ({
   ...state,
-  status: 'error',
+  fetchStatus: FetchStatus.success,
+  userStatus: UserStatus.idle,
   error: action.payload as IUserError,
 })
 
@@ -98,12 +103,14 @@ export const userSlice = createSlice({
     },
     setSuccess: (state) => ({
       ...state,
-      status: 'success',
+      fetchStatus: FetchStatus.success,
+      userStatus: UserStatus.idle,
       error: null,
     }),
     clearError: (state) => ({
       ...state,
-      status: 'idle',
+      fetchStatus: FetchStatus.idle,
+      userStatus: UserStatus.idle,
       error: null,
     }),
   },
@@ -116,14 +123,17 @@ export const userSlice = createSlice({
     builder.addCase(signUp.fulfilled, storeUser)
     builder.addCase(signUp.rejected, errorUser)
 
-    builder.addCase(initUser.pending, (state) => ({ ...state, loadingInitial: true }))
+    builder.addCase(initUser.pending, (state) => {
+      state.loadingInitial = true
+    })
 
-    builder.addCase(initUser.fulfilled, (state, action) => ({
-      ...state,
-      info: action.payload as IUser | null,
-      loadingInitial: false,
-    }))
-    builder.addCase(initUser.rejected, (state) => ({ ...state, loadingInitial: false }))
+    builder.addCase(initUser.fulfilled, (state, action) => {
+      state.info = action.payload as IUser | null
+      state.loadingInitial = false
+    })
+    builder.addCase(initUser.rejected, (state) => {
+      state.loadingInitial = false
+    })
 
     builder.addCase(updateProfile.pending, loadingUser)
     builder.addCase(updateProfile.fulfilled, updateUser)

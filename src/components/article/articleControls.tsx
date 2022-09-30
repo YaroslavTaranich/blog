@@ -2,17 +2,18 @@ import { FC, memo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useAppDispatch } from '../../hooks/reduxHooks'
-import { StatusType } from '../../models/status'
+import { ArticleStatus, FetchStatus } from '../../models/enums'
 import { removeArtilce } from '../../redux/slices/articlesSlice'
 import Button, { ButtonWithConfirm } from '../UI/button/button'
 
 import styles from './article.module.css'
 
 interface ArtileControlsProps {
-  status: StatusType
+  fetchStatus: FetchStatus
+  articleStatus: ArticleStatus
 }
 
-const ArtileControls: FC<ArtileControlsProps> = ({ status }) => {
+const ArtileControls: FC<ArtileControlsProps> = ({ fetchStatus, articleStatus }) => {
   const params = useParams()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -24,7 +25,7 @@ const ArtileControls: FC<ArtileControlsProps> = ({ status }) => {
   return (
     <div className={styles.controls}>
       <div className={styles.buttons}>
-        <ButtonWithConfirm type="danger" size="sm" onClick={onDelite} loading={status === 'deleting'}>
+        <ButtonWithConfirm type="danger" size="sm" onClick={onDelite} loading={fetchStatus === FetchStatus.loading}>
           Delete
         </ButtonWithConfirm>
 
@@ -32,7 +33,9 @@ const ArtileControls: FC<ArtileControlsProps> = ({ status }) => {
           Edit
         </Button>
       </div>
-      {status === 'deleteError' && <div className={styles.delete_error}>Can not delete this article</div>}
+      {fetchStatus === FetchStatus.error && articleStatus === ArticleStatus.delete && (
+        <div className={styles.delete_error}>Can not delete this article</div>
+      )}
     </div>
   )
 }

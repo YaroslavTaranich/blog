@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useForm, DeepPartial, Path, Resolver, FieldValues } from 'react-hook-form'
 
-import { StatusType } from '../../models/status'
 import FormTitle from '../UI/formTitle/formTitle'
 
 import styles from './userForm.module.css'
@@ -10,7 +9,7 @@ interface UserFormProps<T extends FieldValues> {
   onSubmit: (data: T) => void
   children: (ReactElement | null)[]
   title: string
-  status: StatusType
+  loading: boolean
   resolver: Resolver<T> | undefined
   defaultValues?: DeepPartial<T>
   serverErrors?: IServerError<T>[]
@@ -29,7 +28,7 @@ const UserForm = <T extends Record<string, unknown>>({
   onSubmit,
   resolver,
   title,
-  status,
+  loading,
   defaultValues,
   serverErrors,
   ...rest
@@ -51,8 +50,8 @@ const UserForm = <T extends Record<string, unknown>>({
   }, [serverErrors])
 
   useEffect(() => {
-    if (status === 'loading') clearErrors()
-  }, [status])
+    if (loading) clearErrors()
+  }, [loading])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.user_form} {...rest}>

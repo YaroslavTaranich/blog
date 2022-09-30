@@ -27,7 +27,7 @@ const ArticleShort: FC<ArticleShortProps> = ({ article }) => {
         <Link to={`${slug}`} className={styles.title}>
           {title}
         </Link>
-        <Like count={favoritesCount} isFavorite={favorited} slug={slug} likeHandler={likeHandler} />
+        <Like count={favoritesCount} isFavorite={favorited} likeHandler={likeHandler} />
       </header>
       <TagList tags={tagList} />
       <div className={styles.description}>{description}</div>

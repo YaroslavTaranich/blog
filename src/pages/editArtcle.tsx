@@ -6,6 +6,7 @@ import ErrorMessage from '../components/errorMessage/errorMessge'
 import Spinner from '../components/UI/spinner/spinner'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
 import { IArticleFormData, IArticlePostData } from '../models/articles'
+import { ArticleStatus, FetchStatus } from '../models/enums'
 import { getArticleBySlug, updateArticle, getCurrentArticle, getArticlesInfo } from '../redux/slices/articlesSlice'
 import { getUserData } from '../redux/slices/userSlice'
 import { formatDataToPost, formatFetchedToData } from '../utils/formatFromFormToFetch'
@@ -15,7 +16,7 @@ const EditArticle = () => {
   const dispatch = useAppDispatch()
 
   const article = useAppSelector(getCurrentArticle)
-  const { status } = useAppSelector(getArticlesInfo)
+  const { fetchStatus, articleStatus } = useAppSelector(getArticlesInfo)
 
   const { info, loadingInitial } = useAppSelector(getUserData)
 
@@ -35,11 +36,15 @@ const EditArticle = () => {
     return <ErrorMessage button="go back">You can edit only your one articles</ErrorMessage>
   }
 
-  if (status === 'updated' || (!article && status === 'success')) return <Navigate to={`/articles/1/${params.slug}`} />
+  if (
+    (fetchStatus === FetchStatus.success && articleStatus === ArticleStatus.update) ||
+    (!article && fetchStatus === FetchStatus.success)
+  )
+    return <Navigate to={`/articles/1/${params.slug}`} />
 
-  if (status === 'error') return <ErrorMessage button="To articles">Opps..</ErrorMessage>
+  if (fetchStatus === FetchStatus.error) return <ErrorMessage button="To articles">Opps..</ErrorMessage>
 
-  if (status === 'loading' || loadingInitial) return <Spinner />
+  if (fetchStatus === FetchStatus.loading || loadingInitial) return <Spinner />
 
   const defaultValues: IArticlePostData = {
     title: article.title,

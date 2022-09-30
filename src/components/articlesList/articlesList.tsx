@@ -7,6 +7,7 @@ import ArticleShort from '../articleShort/articleShort'
 import ErrorMessage from '../errorMessage/errorMessge'
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
 import { getArticlesByPage, artcilesSelectors, getArticlesInfo } from '../../redux/slices/articlesSlice'
+import { ArticleStatus, FetchStatus } from '../../models/enums'
 
 import styles from './articlesList.module.css'
 
@@ -17,7 +18,7 @@ function ArticlesList() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const articles = useAppSelector(artcilesSelectors.selectAll)
-  const { status, articlesCount } = useAppSelector(getArticlesInfo)
+  const { fetchStatus, articleStatus, articlesCount } = useAppSelector(getArticlesInfo)
 
   useEffect(() => {
     if (Number.isNaN(Number(page))) navigate('/not-found')
@@ -28,11 +29,11 @@ function ArticlesList() {
     dispatch(getArticlesByPage(params))
   }, [page])
 
-  if (status === 'error') {
+  if (fetchStatus === FetchStatus.error && articleStatus === ArticleStatus.read) {
     return <ErrorMessage button="Go back!">Failed to load articles! Try again later! :(</ErrorMessage>
   }
 
-  if (status === 'loading') return <Spinner />
+  if (fetchStatus === FetchStatus.loading && articleStatus === ArticleStatus.read) return <Spinner />
 
   if (articles.length > 0 && articlesCount && Math.ceil(articlesCount / perPage) < Number(page)) {
     return <Navigate to="/404" replace />

@@ -11,11 +11,12 @@ import MakeFormErrors from '../utils/makeFormErrorsFromServer'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
 import { clearError, signUp, getUserData } from '../redux/slices/userSlice'
 import { ISignUpData } from '../models/user'
+import { FetchStatus } from '../models/enums'
 
 import styles from './pages.module.css'
 
 function SignUp() {
-  const { info: user, error, status, loadingInitial } = useAppSelector(getUserData)
+  const { info: user, error, fetchStatus, loadingInitial } = useAppSelector(getUserData)
   const dispatch = useAppDispatch()
 
   const onSubmit = ({ username, email, password }: ISignUpData) => dispatch(signUp({ username, email, password }))
@@ -34,7 +35,7 @@ function SignUp() {
     <section>
       <UserForm<ISignUpData>
         onSubmit={onSubmit}
-        status={status}
+        loading={fetchStatus === FetchStatus.loading}
         title="Sign Up"
         resolver={yupResolver(singIpSchema)}
         serverErrors={error && MakeFormErrors(error)}
@@ -55,7 +56,7 @@ function SignUp() {
                   information"
         />
 
-        <Button submit loading={status === 'loading'}>
+        <Button submit loading={fetchStatus === FetchStatus.loading}>
           Create
         </Button>
 

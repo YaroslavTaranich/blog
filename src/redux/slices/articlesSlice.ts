@@ -10,7 +10,7 @@ import {
 } from '@reduxjs/toolkit'
 
 import { IArticle, IArticlePostData, IGetArticleList } from '../../models/articles'
-import { StatusType } from '../../models/status'
+import { ArticleStatus, FetchStatus } from '../../models/enums'
 import ArticleService from '../../services/ArticleServise'
 import type { RootState } from '../store'
 
@@ -21,14 +21,16 @@ const articlesAdapter = createEntityAdapter<IArticle>({ selectId: (article) => a
 interface ArticleState extends EntityState<IArticle> {
   currentSlug: string | null
   articlesCount: number | null
-  status: StatusType
+  fetchStatus: FetchStatus
+  articleStatus: ArticleStatus
   error: any | null
 }
 
 const initialState: ArticleState = articlesAdapter.getInitialState({
   currentSlug: null,
   articlesCount: null,
-  status: 'idle',
+  fetchStatus: FetchStatus.loading,
+  articleStatus: ArticleStatus.read,
   error: null,
 })
 
@@ -91,61 +93,74 @@ export const toggleFavoriteArticle = createAsyncThunk(
     likeArticle(slug, isFavorite).then(() => dispatch(setFavorite({ slug, isFavorite })))
 )
 
-const loadingArticle: CaseReducer<ArticleState> = (state) => ({ ...state, status: 'loading', error: null })
-const errorArticle: CaseReducer<ArticleState> = (state, action) => ({
-  ...state,
-  status: 'error',
-  error: action.payload,
-})
+function loadingArticle(articleStatus: ArticleStatus): CaseReducer<ArticleState> {
+  return (state) => ({
+    ...state,
+    fetchStatus: FetchStatus.loading,
+    articleStatus,
+    error: null,
+  })
+}
+
+function errorArticle(articleStatus: ArticleStatus): CaseReducer<ArticleState> {
+  return (state, action) => ({
+    ...state,
+    fetchStatus: FetchStatus.loading,
+    articleStatus,
+    error: action.payload,
+  })
+}
 
 export const articlesSlice = createSlice({
   name: 'articles',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getArticlesByPage.pending, loadingArticle)
-    builder.addCase(getArticlesByPage.rejected, errorArticle)
+    builder.addCase(getArticlesByPage.pending, loadingArticle(ArticleStatus.read))
+    builder.addCase(getArticlesByPage.rejected, errorArticle(ArticleStatus.read))
     builder.addCase(getArticlesByPage.fulfilled, (state, action) => {
-      state.status = 'success'
+      state.fetchStatus = FetchStatus.success
+      state.articleStatus = ArticleStatus.read
       state.error = null
       state.currentSlug = null
       state.articlesCount = action.payload.articlesCount
       articlesAdapter.setAll(state, action.payload.articles)
     })
 
-    builder.addCase(getArticleBySlug.pending, loadingArticle)
-    builder.addCase(getArticleBySlug.rejected, errorArticle)
+    builder.addCase(getArticleBySlug.pending, loadingArticle(ArticleStatus.read))
+    builder.addCase(getArticleBySlug.rejected, errorArticle(ArticleStatus.read))
     builder.addCase(getArticleBySlug.fulfilled, (state, action) => {
-      state.status = 'success'
+      state.fetchStatus = FetchStatus.success
+      state.articleStatus = ArticleStatus.read
       state.error = null
       state.currentSlug = action.payload.slug
       articlesAdapter.addOne(state, action.payload)
     })
 
-    builder.addCase(createNewArticle.pending, loadingArticle)
-    builder.addCase(createNewArticle.rejected, errorArticle)
+    builder.addCase(createNewArticle.pending, loadingArticle(ArticleStatus.create))
+    builder.addCase(createNewArticle.rejected, errorArticle(ArticleStatus.create))
     builder.addCase(createNewArticle.fulfilled, (state, action) => {
-      state.status = 'created'
+      state.fetchStatus = FetchStatus.success
+      state.articleStatus = ArticleStatus.create
       state.error = null
       state.currentSlug = action.payload.slug
       articlesAdapter.addOne(state, action.payload)
     })
-    builder.addCase(updateArticle.pending, loadingArticle)
-    builder.addCase(updateArticle.rejected, errorArticle)
+    builder.addCase(updateArticle.pending, loadingArticle(ArticleStatus.update))
+    builder.addCase(updateArticle.rejected, errorArticle(ArticleStatus.update))
     builder.addCase(updateArticle.fulfilled, (state, action) => {
-      state.status = 'updated'
+      state.fetchStatus = FetchStatus.success
+      state.articleStatus = ArticleStatus.update
       state.error = null
       state.currentSlug = action.payload.slug
       articlesAdapter.setOne(state, action.payload)
     })
 
-    builder.addCase(removeArtilce.pending, (state) => ({ ...state, status: 'deleting', error: null }))
-    builder.addCase(removeArtilce.rejected, (state, action) => {
-      state.error = action.payload
-      state.status = 'deleteError'
-    })
+    builder.addCase(removeArtilce.pending, loadingArticle(ArticleStatus.delete))
+    builder.addCase(removeArtilce.rejected, errorArticle(ArticleStatus.delete))
     builder.addCase(removeArtilce.fulfilled, (state) => {
-      state.status = 'deleted'
+      state.fetchStatus = FetchStatus.success
+      state.articleStatus = ArticleStatus.delete
     })
 
     builder.addCase(setFavorite, (state, action) => {
@@ -167,9 +182,10 @@ export default articlesSlice.reducer
 const selectArticles = (state: RootState) => state.articles
 
 export const getArticlesInfo = createSelector(selectArticles, (articles) => {
-  const { articlesCount, error, status, currentSlug } = articles
+  const { articlesCount, error, fetchStatus, articleStatus, currentSlug } = articles
   return {
-    status,
+    fetchStatus,
+    articleStatus,
     error,
     articlesCount,
     currentSlug,

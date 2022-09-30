@@ -9,33 +9,37 @@ import { IUserFormData } from '../models/user'
 import MakeFormErrors from '../utils/makeFormErrorsFromServer'
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks'
 import { clearError, setSuccess, updateProfile, getUserData } from '../redux/slices/userSlice'
+import { FetchStatus, UserStatus } from '../models/enums'
 
 import styles from './pages.module.css'
 
 function Profile() {
-  const { info, status, error } = useAppSelector(getUserData)
+  const { info, fetchStatus, userStatus, error } = useAppSelector(getUserData)
   const dispatch = useAppDispatch()
 
   const onSubmit = (data: IUserFormData) => dispatch(updateProfile(data))
 
   useEffect(() => {
-    if (status === 'updated') {
+    if (fetchStatus === FetchStatus.success && userStatus === UserStatus.update) {
       setTimeout(() => dispatch(setSuccess()), 4321)
     }
-  }, [status])
+  }, [fetchStatus, userStatus])
 
   useEffect(() => {
     dispatch(clearError())
   }, [])
 
-  const successMessage = status === 'updated' ? <p className={styles.success}>Successfully updated!</p> : null
+  const successMessage =
+    fetchStatus === FetchStatus.success && userStatus === UserStatus.update ? (
+      <p className={styles.success}>Successfully updated!</p>
+    ) : null
 
   return (
     <section>
       {info && (
         <UserForm<IUserFormData>
           title="Edit Profile"
-          status={status}
+          loading={fetchStatus === FetchStatus.loading}
           onSubmit={onSubmit}
           resolver={yupResolver(profileSchema)}
           defaultValues={info}
@@ -51,7 +55,7 @@ function Profile() {
 
           {successMessage}
 
-          <Button submit loading={status === 'loading'}>
+          <Button submit loading={fetchStatus === FetchStatus.loading}>
             Save
           </Button>
         </UserForm>
